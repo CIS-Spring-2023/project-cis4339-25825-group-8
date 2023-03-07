@@ -1,81 +1,81 @@
 <script>
-import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
-import axios from 'axios'
-import { DateTime } from 'luxon'
-const apiURL = import.meta.env.VITE_ROOT_API
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import axios from "axios";
+import { DateTime } from "luxon";
+const apiURL = import.meta.env.VITE_ROOT_API;
 
 export default {
-  props: ['id'],
+  props: ["id"],
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) }
+    return { v$: useVuelidate({ $autoDirty: true }) };
   },
   data() {
     return {
       clientAttendees: [],
       event: {
-        name: '',
+        name: "",
         services: [],
-        date: '',
+        date: "",
         address: {
-          line1: '',
-          line2: '',
-          city: '',
-          county: '',
-          zip: ''
+          line1: "",
+          line2: "",
+          city: "",
+          county: "",
+          zip: "",
         },
-        description: '',
-        attendees: []
-      }
-    }
+        description: "",
+        attendees: [],
+      },
+    };
   },
   created() {
     axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
-      this.event = res.data
-      this.event.date = this.formattedDate(this.event.date)
+      this.event = res.data;
+      this.event.date = this.formattedDate(this.event.date);
       this.event.attendees.forEach((e) => {
         axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
-          this.clientAttendees.push(res.data)
-        })
-      })
-    })
+          this.clientAttendees.push(res.data);
+        });
+      });
+    });
   },
   methods: {
     // better formatted date, converts UTC to local time
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: 'utc'
-      })
+        zone: "utc",
+      });
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toISODate()
+        .toISODate();
     },
     handleEventUpdate() {
       axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
-        alert('Update has been saved.')
-        this.$router.back()
-      })
+        alert("Update has been saved.");
+        this.$router.back();
+      });
     },
     editClient(clientID) {
-      this.$router.push({ name: 'updateclient', params: { id: clientID } })
+      this.$router.push({ name: "updateclient", params: { id: clientID } });
     },
     eventDelete() {
       axios.delete(`${apiURL}/events/${this.id}`).then(() => {
-        alert('Event has been deleted.')
-        this.$router.push({ name: 'findevents' })
-      })
-    }
+        alert("Event has been deleted.");
+        this.$router.push({ name: "findevents" });
+      });
+    },
   },
   // sets validations for the various data properties
   validations() {
     return {
       event: {
         name: { required },
-        date: { required }
-      }
-    }
-  }
-}
+        date: { required },
+      },
+    };
+  },
+};
 </script>
 <template>
   <main>
@@ -339,7 +339,7 @@ export default {
                   :key="client._id"
                 >
                   <td class="p-2 text-left">
-                    {{ client.firstName + ' ' + client.lastName }}
+                    {{ client.firstName + " " + client.lastName }}
                   </td>
                   <td class="p-2 text-left">{{ client.address.city }}</td>
                   <td class="p-2 text-left">

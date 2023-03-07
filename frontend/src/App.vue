@@ -1,20 +1,20 @@
 <script>
-import axios from 'axios'
-const apiURL = import.meta.env.VITE_ROOT_API
+import axios from "axios";
+const apiURL = import.meta.env.VITE_ROOT_API;
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      orgName: 'Dataplatform'
-    }
+      orgName: "Dataplatform",
+    };
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
-      this.orgName = res.data.name
-    })
-  }
-}
+      this.orgName = res.data.name;
+    });
+  },
+};
 </script>
 <template>
   <main class="flex flex-row">
@@ -73,6 +73,16 @@ export default {
                   >search</span
                 >
                 Find Event
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/loginPage">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >login</span
+                >
+                Login
               </router-link>
             </li>
           </ul>
