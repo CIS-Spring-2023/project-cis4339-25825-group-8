@@ -26,6 +26,16 @@ export default {
         <nav class="mt-10">
           <ul class="flex flex-col gap-4">
             <li>
+              <router-link to="/loginPage">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >login</span
+                >
+                Login
+              </router-link>
+            </li>
+            <li>
               <router-link to="/">
                 <span
                   style="position: relative; top: 6px"
