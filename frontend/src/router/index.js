@@ -13,11 +13,6 @@ const routes = [
     component: () => import('../components/homePage.vue')
   },
   {
-    path: '/pieChart',
-    name: 'Pie',
-    component: () => import('../components/pieChart.vue')
-  },
-  {
     path: '/intakeform',
     name: 'intakeform',
     props: true,
