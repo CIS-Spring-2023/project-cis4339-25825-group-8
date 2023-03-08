@@ -46,6 +46,16 @@ export default {
               </router-link>
             </li>
             <li>
+              <router-link to="/pieChart">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >pie</span
+                >
+                Pie
+              </router-link>
+            </li>
+            <li>
               <router-link to="/intakeform">
                 <span
                   style="position: relative; top: 6px"

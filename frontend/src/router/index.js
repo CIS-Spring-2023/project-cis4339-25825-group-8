@@ -3,14 +3,19 @@ import { createRouter, createWebHistory } from 'vue-router'
 // make all paths and names lowercase for consistency
 const routes = [
   {
+    path: '/loginPage',
+    name: 'Login',
+    component: () => import('../components/loginPage.vue')
+  },
+  {
     path: '/',
     props: true,
     component: () => import('../components/homePage.vue')
   },
   {
-    path: '/loginPage',
-    name: 'Login',
-    component: () => import('../components/loginPage.vue')
+    path: '/pieChart',
+    name: 'Pie',
+    component: () => import('../components/pieChart.vue')
   },
   {
     path: '/intakeform',
