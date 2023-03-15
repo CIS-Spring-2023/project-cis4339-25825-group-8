@@ -1,79 +1,73 @@
-<script>
-import { DateTime } from "luxon";
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
+ <!-- I still need to add comments to this code/functionality and the Donught Chart. I also need to add refrences. 
+This functionality is not completed it needs to be added to the create events page. -->
+<template> 
+  <div>
+    <h1>Services</h1>
+    <form @submit.prevent="createService">
+      <label for="name">Service name:</label>
+      <input type="text" id="name" v-model="newServiceName" required>
+      <button type="submit">Create service</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(service, index) in services" :key="service.id">
+          <td>
+            <input type="text" v-model="service.name" :disabled="service.status === 'inactive'" required>
+          </td>
+          <td>
+            <select v-model="service.status" :disabled="service.status === 'inactive'">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </td>
+          <td>
+            <button @click="updateService(index)" :disabled="service.status === 'inactive'">Save</button>
+            <button @click="deleteService(index)">{{ service.status === 'inactive' ? 'Restore' : 'Delete' }}</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
 
+<script>
 export default {
   data() {
     return {
-      input: {
-        username: "",
-        password: "",
-      },
-    };
+      services: [
+        { id: 1, name: 'Service 1', status: 'active' },
+        { id: 2, name: 'Service 2', status: 'active' },
+        { id: 3, name: 'Service 3', status: 'inactive' },
+      ],
+      newServiceName: '',
+    }
   },
   methods: {
-    test() {
-      var un = form.elements["username"].value;
-      var pw = form.elements["password"].value;
-      alert(`${pw} hello`);
+    createService() {
+      const newService = { id: Date.now(), name: this.newServiceName, status: 'active' }
+      this.services.push(newService)
+      this.newServiceName = ''
     },
-    validate() {
-      var un = form.elements["username"].value;
-      var pw = form.elements["password"].value;
-      if (un == "admin" && pw == "password") {
-        alert("Successful Login!");
-        return;
+    updateService(index) {
+      const service = this.services[index]
+      // send service to server or update in local storage
+    },
+    deleteService(index) {
+      const service = this.services[index]
+      if (service.status === 'inactive') {
+        this.services.splice(index, 1)
       } else {
-        alert("Login failed");
+        service.status = 'inactive'
       }
+      // send service to server or update in local storage
     },
   },
-};
+}
 </script>
-
-<template>
-  <form id="form" method="post">
-    <main class="w-1/2, flex justify-center">
-      <div
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-2"
-      >
-        <h2
-          class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10"
-        >
-          Login
-        </h2>
-
-        <label>
-          <span class="text-gray-700">Username:</span>
-          <input
-            type="text"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            v-model="input.username"
-            name="username"
-            required
-            autocomplete="off"
-          />
-        </label>
-        <label>
-          <span class="text-gray-700">Password:</span>
-          <input
-            v-model="input.password"
-            type="password"
-            name="password"
-            required
-            autocomplete="off"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </label>
-        <button
-          class="bg-red-700 text-white rounded"
-          id="loginBTN"
-          @click="validate(form)"
-        >
-          Submit
-        </button>
-      </div>
-    </main>
-  </form>
-</template>
