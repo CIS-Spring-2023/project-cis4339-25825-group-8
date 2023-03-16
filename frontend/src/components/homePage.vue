@@ -1,26 +1,14 @@
 <script>
-<<<<<<< HEAD
-import { DateTime } from "luxon";
-import axios from "axios";
-import AttendanceChart from "./barChart.vue";
-import AttendancePie from "./pieChart.vue";
-const apiURL = import.meta.env.VITE_ROOT_API;
-=======
 import { DateTime } from 'luxon'
 import axios from 'axios'
 import AttendanceChart from './barChart.vue'
-import zipChart from './pieChart.vue'  // import piechart
+import zipChart from './pieChart.vue'
 const apiURL = import.meta.env.VITE_ROOT_API
->>>>>>> d273118138d5543137d31aebce41041b336de3be
 
 export default {
   components: {
     AttendanceChart,
-<<<<<<< HEAD
-    AttendancePie,
-=======
-    zipChart   // add the zipChart from the pieChart component
->>>>>>> d273118138d5543137d31aebce41041b336de3be
+    zipChart
   },
   data() {
     return {
@@ -28,60 +16,60 @@ export default {
       labels: [],
       chartData: [],
       loading: false,
-      error: null,
-    };
+      error: null
+    }
   },
   mounted() {
-    this.getAttendanceData();
+    this.getAttendanceData()
   },
   methods: {
     async getAttendanceData() {
       try {
-        this.error = null;
-        this.loading = true;
-        const response = await axios.get(`${apiURL}/events/attendance`);
-        this.recentEvents = response.data;
+        this.error = null
+        this.loading = true
+        const response = await axios.get(`${apiURL}/events/attendance`)
+        this.recentEvents = response.data
         this.labels = response.data.map(
           (item) => `${item.name} (${this.formattedDate(item.date)})`
-        );
-        this.chartData = response.data.map((item) => item.attendees.length);
+        )
+        this.chartData = response.data.map((item) => item.attendees.length)
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.error = {
-            title: "Server Response",
-            message: err.message,
-          };
+            title: 'Server Response',
+            message: err.message
+          }
         } else if (err.request) {
           // client never received a response, or request never left
           this.error = {
-            title: "Unable to Reach Server",
-            message: err.message,
-          };
+            title: 'Unable to Reach Server',
+            message: err.message
+          }
         } else {
           // There's probably an error in your code
           this.error = {
-            title: "Application Error",
-            message: err.message,
-          };
+            title: 'Application Error',
+            message: err.message
+          }
         }
       }
-      this.loading = false;
+      this.loading = false
     },
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: "utc",
-      });
+        zone: 'utc'
+      })
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toLocaleString();
+        .toLocaleString()
     },
     // method to allow click through table to event details
     editEvent(eventID) {
-      this.$router.push({ name: "eventdetails", params: { id: eventID } });
-    },
-  },
-};
+      this.$router.push({ name: 'eventdetails', params: { id: eventID } })
+    }
+  }
+}
 </script>
 
 <template>
@@ -135,12 +123,11 @@ export default {
               :label="labels"
               :chart-data="chartData"
             ></AttendanceChart>
-            <!-- add zipChart -->
-            <zipChart 
+            <zipChart
               v-if="!loading && !error"
               :label="labels"
               :chart-data="chartData"
-            ></zipChart> 
+            ></zipChart>
 
             <!-- Start of loading animation -->
             <div class="mt-40" v-if="loading">
