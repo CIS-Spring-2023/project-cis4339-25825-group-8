@@ -1,18 +1,31 @@
+--app
 <script>
 import axios from "axios";
 const apiURL = import.meta.env.VITE_ROOT_API;
-
+import loginPage from "./components/loginPage.vue";
 export default {
+  components: {
+    loginPage,
+  },
   name: "App",
+
   data() {
     return {
       orgName: "Dataplatform",
+      username: "",
+      password: "",
+      authenticated: false,
     };
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
       this.orgName = res.data.name;
     });
+  },
+  methods: {
+    login() {
+      this.$emit("login", { username: this.username, password: this.password });
+    },
   },
 };
 </script>
@@ -36,26 +49,6 @@ export default {
               </router-link>
             </li>
             <li>
-              <router-link to="/intakeform">
-                <span
-                  style="position: relative; top: 6px"
-                  class="material-icons"
-                  >people</span
-                >
-                Client Intake Form
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/eventform">
-                <span
-                  style="position: relative; top: 6px"
-                  class="material-icons"
-                  >event</span
-                >
-                Create Event
-              </router-link>
-            </li>
-            <li>
               <router-link to="/findclient">
                 <span
                   style="position: relative; top: 6px"
@@ -75,16 +68,29 @@ export default {
                 Find Event
               </router-link>
             </li>
-            <li>
-              <router-link to="/loginPage">
-                <span
-                  style="position: relative; top: 6px"
-                  class="material-icons"
-                  >login</span
-                >
-                Login
-              </router-link>
-            </li>
+            <div v-if="$root.authenticated">
+              <li>
+                <router-link to="/intakeform">
+                  <span
+                    style="position: relative; top: 6px"
+                    class="material-icons"
+                    >people</span
+                  >
+                  Client Intake Form
+                </router-link>
+              </li>
+              <br />
+              <li>
+                <router-link to="/eventform">
+                  <span
+                    style="position: relative; top: 6px"
+                    class="material-icons"
+                    >event</span
+                  >
+                  Create Event
+                </router-link>
+              </li>
+            </div>
           </ul>
         </nav>
       </header>

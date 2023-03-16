@@ -1,6 +1,8 @@
+--login
 <script>
 import { DateTime } from "luxon";
 import axios from "axios";
+
 const apiURL = import.meta.env.VITE_ROOT_API;
 
 export default {
@@ -13,19 +15,17 @@ export default {
     };
   },
   methods: {
-    test() {
-      var un = form.elements["username"].value;
-      var pw = form.elements["password"].value;
-      alert(`${pw} hello`);
-    },
-    validate() {
-      var un = form.elements["username"].value;
-      var pw = form.elements["password"].value;
+    validate(credentials) {
+      console.log(credentials);
+      let logBool = false;
+      let un = form.elements["username"].value;
+      let pw = form.elements["password"].value;
       if (un == "admin" && pw == "password") {
         alert("Successful Login!");
-        return;
+        this.$root.authenticated = true;
       } else {
         alert("Login failed");
+        location.replace("./loginPage");
       }
     },
   },
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <template>
-  <form id="form" method="post">
+  <form id="form" method="post" @submit.prevent="onSubmit">
     <main class="w-1/2, flex justify-center">
       <div
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-2"
@@ -67,6 +67,7 @@ export default {
           />
         </label>
         <button
+          type="submit"
           class="bg-red-700 text-white rounded"
           id="loginBTN"
           @click="validate(form)"

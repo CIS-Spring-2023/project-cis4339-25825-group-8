@@ -62,17 +62,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-const loggedIn = false;
-router.beforeEach((to, from, next) => {
-  if (to.meta.needsAuth) {
-    if (loggedIn) {
-      next();
-    } else {
-      next("/loginPage");
-      alert("Please Login for access");
-    }
-  } else {
-    next();
-  }
-});
+
 export default router;

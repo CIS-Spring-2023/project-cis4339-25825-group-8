@@ -1,3 +1,8 @@
+<template>
+  <div class="shadow-lg rounded-lg overflow-hidden">
+    <canvas class="p-10" ref="attendancePie"></canvas>
+  </div>
+</template>
 <script>
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
@@ -16,13 +21,13 @@ export default {
     const borderColor = backgroundColor.map((e) =>
       e.replace(/[\d\.]+\)$/g, "1)")
     );
-    await new Chart(this.$refs.attendanceChart, {
-      type: "bar",
+    await new Chart(this.$refs.attendancePie, {
+      type: "pie",
       data: {
         labels: this.label,
         datasets: [
           {
-            borderWidth: 1,
+            borderWidth: 11,
             backgroundColor: backgroundColor,
             borderColor: borderColor,
             data: this.chartData,
@@ -38,7 +43,7 @@ export default {
           },
           x: {
             gridLines: {
-              display: true,
+              display: false,
             },
           },
         },
@@ -60,8 +65,3 @@ export default {
   },
 };
 </script>
-<template>
-  <div class="shadow-lg rounded-lg overflow-hidden">
-    <canvas class="p-10" ref="attendanceChart"></canvas>
-  </div>
-</template>
