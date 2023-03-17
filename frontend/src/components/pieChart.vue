@@ -1,3 +1,6 @@
+<!-- This code was created by using the chartJS example found at https://www.chartjs.org/docs/latest/charts/doughnut.html. 
+I also used the existing code in order to successfully implement the chart onto the homepage of the application. 
+I named the chart zipChart and the current data is hardcoded as required for sprint 2-->
 <script>
 import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)

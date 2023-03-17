@@ -20,4 +20,6 @@ cd frontend
 ```
 Follow instructions in frontend README for setup and running as a local instance.
 
+### Documentation for Sprint 2
 
+I have included more information for Sprint 2 in the frontend README.
