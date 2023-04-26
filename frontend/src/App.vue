@@ -17,11 +17,12 @@ export default {
       authenticated: false,
     };
   },
-  created() {
-    axios.get(`${apiURL}/org`).then((res) => {
-      this.orgName = res.data.name;
-    });
-  },
+  // created() {
+  //   axios.get(`${apiURL}/org`).then((res) => {
+  //     this.orgName = res.data.name;
+  //     console.log("hello");
+  //   });
+  // },
   methods: {
     login() {
       this.$emit("login", { username: this.username, password: this.password });
@@ -30,8 +31,8 @@ export default {
 };
 </script>
 <template>
-  <main class="flex flex-row">
-    <div id="_container" class="h-screen">
+  <main class="flex flex-row" id="test">
+    <div id="_container">
       <header class="w-full">
         <section class="text-center">
           <img class="m-auto" src="@\assets\DanPersona.svg" />

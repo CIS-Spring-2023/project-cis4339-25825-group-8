@@ -14,18 +14,30 @@ export default {
       },
     };
   },
+  mounted() {
+    this.$refs.usernameInput.focus();
+  },
   methods: {
-    validate(credentials) {
-      console.log(credentials);
-      let logBool = false;
-      let un = form.elements["username"].value;
-      let pw = form.elements["password"].value;
-      if (un == "admin" && pw == "password") {
-        alert("Successful Login!");
-        this.$root.authenticated = true;
-      } else {
-        alert("Login failed");
-        location.replace("./loginPage");
+    async validate() {
+      try {
+        const response = await axios.post(`${apiURL}/org/login`, {
+          username: this.input.username,
+          password: this.input.password,
+        });
+        if (response.status === 200) {
+          console.log(response.data);
+          alert("Login successful!");
+          this.$root.authenticated = true;
+          this.$router.push("/");
+          console.log("pass");
+        } else {
+          location.reload();
+          alert("Login failed.");
+          console.log("failure");
+        }
+      } catch (error) {
+        location.reload();
+        alert("Login failed.");
       }
     },
   },
@@ -53,6 +65,7 @@ export default {
             name="username"
             required
             autocomplete="off"
+            ref="usernameInput"
           />
         </label>
         <label>
@@ -66,15 +79,26 @@ export default {
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
         </label>
+        <br />
         <button
           type="submit"
-          class="bg-red-700 text-white rounded"
-          id="loginBTN"
+          class="bg-red-550 text-white rounded"
+          id="login-button"
           @click="validate(form)"
         >
           Submit
         </button>
       </div>
     </main>
+    <div class="blank"></div>
   </form>
 </template>
+<style>
+.blank {
+  width: 100%;
+  height: 420px;
+}
+#login-button {
+  background-color: rgb(200, 16, 46);
+}
+</style>
