@@ -39,10 +39,7 @@ router.post("/login", async (req, res, next) => {
     }
     // Query the database for a document that matches the given username field
     const data = await orgs.findOne({
-      $or: [
-        { "credentials.editor.username": username },
-        { "credentials.viewer.username": username },
-      ],
+      $or: [{ "credentials.editor.username": username }],
     });
     if (!data) {
       res.status(401).send("Invalid username or password");
@@ -50,7 +47,7 @@ router.post("/login", async (req, res, next) => {
       // Check if the password matches the hashed password in the database
       const passwordMatch = await bcrypt.compare(
         password,
-        data.credentials.editor.password || data.credentials.viewer.password
+        data.credentials.editor.password
       );
       if (passwordMatch) {
         // Send back the data if username and password match
