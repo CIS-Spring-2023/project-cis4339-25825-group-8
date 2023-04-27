@@ -28,3 +28,9 @@ I have included more information for Sprint 2 in the frontend README.
 ```
 https://documenter.getpostman.com/view/17834164/2s93eR6GF6
 ```
+
+### Login Credentials for the App
+```
+Username: orgAEditor
+Password: orgAEditor
+```
