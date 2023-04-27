@@ -1,33 +1,33 @@
 --app
 <script>
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
-import loginPage from "./components/loginPage.vue";
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
+import loginPage from './components/loginPage.vue'
 export default {
   components: {
-    loginPage,
+    loginPage
   },
-  name: "App",
+  name: 'App',
 
   data() {
     return {
-      orgName: "Dataplatform",
-      username: "",
-      password: "",
-      authenticated: false,
-    };
+      orgName: 'Dataplatform',
+      username: '',
+      password: '',
+      authenticated: false
+    }
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
-      this.orgName = res.data.name;
-    });
+      this.orgName = res.data.name
+    })
   },
   methods: {
     login() {
-      this.$emit("login", { username: this.username, password: this.password });
-    },
-  },
-};
+      this.$emit('login', { username: this.username, password: this.password })
+    }
+  }
+}
 </script>
 <template>
   <main class="flex flex-row">

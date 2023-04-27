@@ -1,55 +1,55 @@
 <script>
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   data() {
     return {
       queryData: [],
       // Parameter for search to occur
-      searchBy: "",
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-    };
+      searchBy: '',
+      firstName: '',
+      lastName: '',
+      phoneNumber: ''
+    }
   },
   created() {
-    this.getClients();
+    this.getClients()
   },
   methods: {
     handleSubmitForm() {
-      let endpoint = "";
-      if (this.searchBy === "Client Name") {
-        endpoint = `clients/search/?firstName=${this.firstName}&lastName=${this.lastName}&searchBy=name`;
-      } else if (this.searchBy === "Client Number") {
-        endpoint = `clients/search/?phoneNumber.primary=${this.phoneNumber}&searchBy=number`;
+      let endpoint = ''
+      if (this.searchBy === 'Client Name') {
+        endpoint = `clients/search/?firstName=${this.firstName}&lastName=${this.lastName}&searchBy=name`
+      } else if (this.searchBy === 'Client Number') {
+        endpoint = `clients/search/?phoneNumber.primary=${this.phoneNumber}&searchBy=number`
       }
       axios.get(`${apiURL}/${endpoint}`).then((res) => {
-        this.queryData = res.data;
-      });
+        this.queryData = res.data
+      })
     },
     // abstract get clients call
     getClients() {
       axios.get(`${apiURL}/clients`).then((res) => {
-        this.queryData = res.data;
-      });
-      window.scrollTo(0, 0);
+        this.queryData = res.data
+      })
+      window.scrollTo(0, 0)
     },
     clearSearch() {
       // Resets all the variables
-      this.searchBy = "";
-      this.firstName = "";
-      this.lastName = "";
-      this.phoneNumber = "";
+      this.searchBy = ''
+      this.firstName = ''
+      this.lastName = ''
+      this.phoneNumber = ''
 
       // get all entries
-      this.getClients();
+      this.getClients()
     },
     editClient(clientID) {
-      this.$router.push({ name: "updateclient", params: { id: clientID } });
-    },
-  },
-};
+      this.$router.push({ name: 'updateclient', params: { id: clientID } })
+    }
+  }
+}
 </script>
 <template>
   <main>
@@ -157,7 +157,7 @@ export default {
               :key="client._id"
             >
               <td class="p-2 text-left">
-                {{ client.firstName + " " + client.lastName }}
+                {{ client.firstName + ' ' + client.lastName }}
               </td>
               <td class="p-2 text-left">
                 {{ client.phoneNumber.primary }}

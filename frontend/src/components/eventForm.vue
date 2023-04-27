@@ -7,6 +7,25 @@ import { required } from '@vuelidate/validators'
 import axios from 'axios'
 const apiURL = import.meta.env.VITE_ROOT_API
 
+const serviceList = document.getElementById('service-list')
+
+fetch('http://localhost:3000/services')
+  .then((response) => response.json())
+  .then((data) => {
+    const activeServices = data.filter(
+      (service) => service.serviceStatus === 'active'
+    )
+    activeServices.forEach((service) => {
+      const listItem = document.createElement('li')
+      listItem.innerHTML = `
+        <label>${service.serviceName}</label>
+        <input type="checkbox" name="service" value="${service._id}">
+      `
+      serviceList.appendChild(listItem)
+    })
+  })
+  .catch((error) => console.error(error))
+
 export default {
   setup() {
     return { v$: useVuelidate({ $autoDirty: true }) }
@@ -17,7 +36,6 @@ export default {
       event: {
         name: '',
         services: [],
-        newServiceName: '',
         date: '',
         address: {
           line1: '',
@@ -30,23 +48,7 @@ export default {
       }
     }
   },
-  methods: { // three methods have been created in order to create, update, and delete from the services list.
-    createService() {
-      const newService = { id: Date.now(), name: this.newServiceName, status: 'active' }
-      this.event.services.push(newService)
-      this.newServiceName = ''
-    },
-    updateService(index) {
-      const service = this.event.services[index]
-    },
-    deleteService(index) {
-      const service = this.event.services[index]
-      if (service.status === 'inactive') {
-        this.event.services.splice(index, 1)
-      } else {
-        service.status = 'inactive'
-      }
-    },
+  methods: {
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
       const isFormCorrect = await this.v$.$validate()
@@ -78,7 +80,9 @@ export default {
 <template>
   <main>
     <div>
-      <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
+      <h1
+        class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10"
+      >
         Create New Event
       </h1>
     </div>
@@ -86,7 +90,9 @@ export default {
       <!-- @submit.prevent stops the submit event from reloading the page-->
       <form @submit.prevent="handleSubmitForm">
         <!-- grid container -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
           <h2 class="text-2xl font-bold">Event Details</h2>
 
           <!-- form field -->
@@ -94,11 +100,17 @@ export default {
             <label class="block">
               <span class="text-gray-700">Event Name</span>
               <span style="color: #ff0000">*</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.name" />
+                v-model="event.name"
+              />
               <span class="text-black" v-if="v$.event.name.$error">
-                <p class="text-red-700" v-for="error of v$.event.name.$errors" :key="error.$uid">
+                <p
+                  class="text-red-700"
+                  v-for="error of v$.event.name.$errors"
+                  :key="error.$uid"
+                >
                   {{ error.$message }}!
                 </p>
               </span>
@@ -112,9 +124,15 @@ export default {
               <span style="color: #ff0000">*</span>
               <input
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.date" type="date" />
+                v-model="event.date"
+                type="date"
+              />
               <span class="text-black" v-if="v$.event.date.$error">
-                <p class="text-red-700" v-for="error of v$.event.date.$errors" :key="error.$uid">
+                <p
+                  class="text-red-700"
+                  v-for="error of v$.event.date.$errors"
+                  :key="error.$uid"
+                >
                   {{ error.$message }}!
                 </p>
               </span>
@@ -129,7 +147,8 @@ export default {
               <span class="text-gray-700">Description</span>
               <textarea
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                rows="2"></textarea>
+                rows="2"
+              ></textarea>
             </label>
           </div>
 
@@ -137,75 +156,53 @@ export default {
           <div></div>
           <div></div>
           <!-- form field -->
-          <!-- Updated template for dynamic services -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
-            <div>  
-              <h1>Services</h1>
-              <form @submit.prevent="createService">
-                <label for="name">Service name:</label>
-                <input type="text" id="name" v-model="newServiceName" required>
-                <button type="submit">Create service</button>
-              </form>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(service, index) in event.services" :key="service.id">
-                    <td>
-                      <input type="text" v-model="service.name" :disabled="service.status === 'inactive'" required>
-                    </td>
-                    <td>
-                      <select v-model="service.status" :disabled="service.status === 'inactive'">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button @click="updateService(index)" :disabled="service.status === 'inactive'">Save</button>
-                      <button @click="deleteService(index)">{{ service.status === 'inactive' ? 'Restore' : 'Delete'
-                      }}</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div>
+              <ul id="service-list"></ul>
             </div>
           </div>
         </div>
 
         <!-- grid container -->
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+        <div
+          class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+        >
           <h2 class="text-2xl font-bold">Address</h2>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">Address Line 1</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder v-model="event.address.line1" />
+                placeholder
+                v-model="event.address.line1"
+              />
             </label>
           </div>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">Address Line 2</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder v-model="event.address.line2" />
+                placeholder
+                v-model="event.address.line2"
+              />
             </label>
           </div>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">City</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder v-model="event.address.city" />
+                placeholder
+                v-model="event.address.city"
+              />
             </label>
           </div>
           <div></div>
@@ -213,18 +210,24 @@ export default {
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">County</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder v-model="event.address.county" />
+                placeholder
+                v-model="event.address.county"
+              />
             </label>
           </div>
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">Zip Code</span>
-              <input type="text"
+              <input
+                type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                placeholder v-model="event.address.zip" />
+                placeholder
+                v-model="event.address.zip"
+              />
             </label>
           </div>
         </div>

@@ -1,62 +1,62 @@
 <script>
-import { DateTime } from "luxon";
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import { DateTime } from 'luxon'
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   data() {
     return {
       events: [],
       // Parameter for search to occur
-      searchBy: "",
-      name: "",
-      eventDate: "",
-    };
+      searchBy: '',
+      name: '',
+      eventDate: ''
+    }
   },
   mounted() {
-    this.getEvents();
+    this.getEvents()
   },
   methods: {
     // better formattedDate
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: "utc",
-      });
+        zone: 'utc'
+      })
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toLocaleString();
+        .toLocaleString()
     },
     handleSubmitForm() {
-      let endpoint = "";
-      if (this.searchBy === "Event Name") {
-        endpoint = `events/search/?name=${this.name}&searchBy=name`;
-      } else if (this.searchBy === "Event Date") {
-        endpoint = `events/search/?eventDate=${this.eventDate}&searchBy=date`;
+      let endpoint = ''
+      if (this.searchBy === 'Event Name') {
+        endpoint = `events/search/?name=${this.name}&searchBy=name`
+      } else if (this.searchBy === 'Event Date') {
+        endpoint = `events/search/?eventDate=${this.eventDate}&searchBy=date`
       }
       axios.get(`${apiURL}/${endpoint}`).then((res) => {
-        this.events = res.data;
-      });
+        this.events = res.data
+      })
     },
     // abstracted method to get events
     getEvents() {
       axios.get(`${apiURL}/events`).then((res) => {
-        this.events = res.data;
-      });
-      window.scrollTo(0, 0);
+        this.events = res.data
+      })
+      window.scrollTo(0, 0)
     },
     clearSearch() {
       // Resets all the variables
-      this.searchBy = "";
-      this.name = "";
-      this.eventDate = "";
+      this.searchBy = ''
+      this.name = ''
+      this.eventDate = ''
 
-      this.getEvents();
+      this.getEvents()
     },
     editEvent(eventID) {
-      this.$router.push({ name: "eventdetails", params: { id: eventID } });
-    },
-  },
-};
+      this.$router.push({ name: 'eventdetails', params: { id: eventID } })
+    }
+  }
+}
 </script>
 
 <template>

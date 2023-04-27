@@ -1,35 +1,35 @@
 --login
 <script>
-import { DateTime } from "luxon";
-import axios from "axios";
+import { DateTime } from 'luxon'
+import axios from 'axios'
 
-const apiURL = import.meta.env.VITE_ROOT_API;
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   data() {
     return {
       input: {
-        username: "",
-        password: "",
-      },
-    };
+        username: '',
+        password: ''
+      }
+    }
   },
   methods: {
     validate(credentials) {
-      console.log(credentials);
-      let logBool = false;
-      let un = form.elements["username"].value;
-      let pw = form.elements["password"].value;
-      if (un == "admin" && pw == "password") {
-        alert("Successful Login!");
-        this.$root.authenticated = true;
+      console.log(credentials)
+      let logBool = false
+      let un = form.elements['username'].value
+      let pw = form.elements['password'].value
+      if (un == 'admin' && pw == 'password') {
+        alert('Successful Login!')
+        this.$root.authenticated = true
       } else {
-        alert("Login failed");
-        location.replace("./loginPage");
+        alert('Login failed')
+        location.replace('./loginPage')
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <template>
