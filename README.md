@@ -23,3 +23,8 @@ Follow instructions in frontend README for setup and running as a local instance
 ### Documentation for Sprint 2
 
 I have included more information for Sprint 2 in the frontend README.
+
+### Postman API Documentation
+```
+https://documenter.getpostman.com/view/17834164/2s93eR6GF6
+```
