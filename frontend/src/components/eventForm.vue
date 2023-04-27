@@ -7,25 +7,6 @@ import { required } from '@vuelidate/validators'
 import axios from 'axios'
 const apiURL = import.meta.env.VITE_ROOT_API
 
-const serviceList = document.getElementById('service-list')
-
-fetch('http://localhost:3000/services')
-  .then((response) => response.json())
-  .then((data) => {
-    const activeServices = data.filter(
-      (service) => service.serviceStatus === 'active'
-    )
-    activeServices.forEach((service) => {
-      const listItem = document.createElement('li')
-      listItem.innerHTML = `
-        <label>${service.serviceName}</label>
-        <input type="checkbox" name="service" value="${service._id}">
-      `
-      serviceList.appendChild(listItem)
-    })
-  })
-  .catch((error) => console.error(error))
-
 export default {
   setup() {
     return { v$: useVuelidate({ $autoDirty: true }) }
@@ -47,6 +28,16 @@ export default {
         description: ''
       }
     }
+  },
+  mounted() {
+    fetch('http://localhost:3000/services')
+      .then((response) => response.json())
+      .then((data) => {
+        this.activeServices = data.filter(
+          (services) => services.status === 'active'
+        )
+      })
+      .catch((error) => console.error(error))
   },
   methods: {
     async handleSubmitForm() {
@@ -158,9 +149,16 @@ export default {
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
-            <div>
-              <ul id="service-list"></ul>
-            </div>
+            <ul>
+              <li v-for="services in activeServices" :key="services._id">
+                <label>{{ services.name }}</label>
+                <input
+                  type="checkbox"
+                  :name="'service-' + services._id"
+                  :value="services._id"
+                />
+              </li>
+            </ul>
           </div>
         </div>
 

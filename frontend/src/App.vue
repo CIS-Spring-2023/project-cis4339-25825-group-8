@@ -68,6 +68,16 @@ export default {
                 Find Event
               </router-link>
             </li>
+            <li>
+              <router-link to="/services">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons"
+                  >search</span
+                >
+                Services
+              </router-link>
+            </li>
             <div v-if="$root.authenticated">
               <li>
                 <router-link to="/intakeform">
