@@ -1,23 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+// let org = process.env.ORG;
+// const org = "2";
+let globals = require("./globals");
 
-// const org = process.env.ORG;
-const org = "2";
+let org = globals.getGlobalVariable();
 
 // importing data model schemas
 const { orgs } = require("../models/models");
 
-// GET org
-// router.get("/", (req, res, next) => {
-//   orgs.findById(org, (error, data) => {
-//     if (error) {
-//       return next(error);
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// });
 router.get("/", (req, res, next) => {
   orgs.find({}, (error, data) => {
     if (error) {
@@ -50,6 +43,7 @@ router.post("/login", async (req, res, next) => {
         data.credentials.editor.password
       );
       if (passwordMatch) {
+        globals.setGlobalVariable(data._id);
         // Send back the data if username and password match
         console.log(data);
         res.json(data);
@@ -62,4 +56,5 @@ router.post("/login", async (req, res, next) => {
     return next(error);
   }
 });
+
 module.exports = router;

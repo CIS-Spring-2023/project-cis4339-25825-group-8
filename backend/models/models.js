@@ -24,16 +24,6 @@ const orgDataSchema = new Schema(
           required: true,
         },
       },
-      viewer: {
-        username: {
-          type: String,
-          required: true,
-        },
-        password: {
-          type: String,
-          required: true,
-        },
-      },
     },
   },
   {
@@ -156,19 +146,19 @@ const servicesDataSchema = new Schema(
   {
     _id: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     status: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    collection: 'services'
+    collection: "services",
   }
 );
 
@@ -176,7 +166,7 @@ const servicesDataSchema = new Schema(
 const clients = mongoose.model("client", clientDataSchema);
 const orgs = mongoose.model("org", orgDataSchema);
 const events = mongoose.model("event", eventDataSchema);
-const services = mongoose.model('services', servicesDataSchema);
+const services = mongoose.model("services", servicesDataSchema);
 
 // package the models in an object to export
 module.exports = { clients, orgs, events, services };

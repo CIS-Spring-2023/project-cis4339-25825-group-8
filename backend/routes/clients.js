@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
-
-const org = process.env.ORG;
+require("dotenv").config();
+// let org = process.env.ORG;
+let globals = require("./globals");
 
 // importing data model schemas
 const { clients } = require("../models/models");
 
 // GET 10 most recent clients for org
 router.get("/", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   clients
     .find({ orgs: org }, (error, data) => {
       if (error) {
@@ -22,6 +24,7 @@ router.get("/", (req, res, next) => {
 
 // GET single client by ID
 router.get("/id/:id", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   // use findOne instead of find to not return array
   clients.findOne({ _id: req.params.id, orgs: org }, (error, data) => {
     if (error) {
@@ -37,6 +40,7 @@ router.get("/id/:id", (req, res, next) => {
 // GET entries based on search query
 // Ex: '...?firstName=Bob&lastName=&searchBy=name'
 router.get("/search", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   const dbQuery = { orgs: org };
   switch (req.query.searchBy) {
     case "name":
@@ -82,6 +86,7 @@ router.get("/lookup/:phoneNumber", (req, res, next) => {
 
 // POST new client
 router.post("/", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   const newClient = req.body;
   newClient.orgs = [org];
   clients.create(newClient, (error, data) => {
@@ -106,6 +111,7 @@ router.put("/update/:id", (req, res, next) => {
 
 // PUT add existing client to org
 router.put("/register/:id", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   clients.findByIdAndUpdate(
     req.params.id,
     { $push: { orgs: org } },
@@ -122,6 +128,7 @@ router.put("/register/:id", (req, res, next) => {
 
 // PUT remove existing client from org
 router.put("/deregister/:id", (req, res, next) => {
+  let org = globals.getGlobalVariable();
   clients.findByIdAndUpdate(
     req.params.id,
     { $pull: { orgs: org } },
