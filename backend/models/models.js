@@ -154,10 +154,7 @@ const eventDataSchema = new Schema(
 // collection for services
 const servicesDataSchema = new Schema(
   {
-    _id: {
-      type: String,
-      required: true,
-    },
+    _id: { type: String, default: uuid.v1 },
     name: {
       type: String,
       required: true,

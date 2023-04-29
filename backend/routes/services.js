@@ -44,4 +44,17 @@ router.put('/update/:id', (req, res, next) => {
     })
 })
 
+// hard DELETE service by ID
+router.delete('/:id', (req, res, next) => {
+    services.findByIdAndDelete(req.params.id, (error, data) => {
+        if (error) {
+            return next(error)
+        } else if (!data) {
+            res.status(400).send('Service not found')
+        } else {
+            res.send('Service deleted')
+        }
+    })
+})
+
 module.exports = router

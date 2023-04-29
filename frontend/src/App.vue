@@ -66,6 +66,17 @@ export default {
             </li>
             <div v-if="$root.authenticated">
               <li>
+                <router-link to="/services">
+                  <span
+                    style="position: relative; top: 6px"
+                    class="material-icons"
+                    >search</span
+                  >
+                  Services
+                </router-link>
+              </li>
+              <br />
+              <li>
                 <router-link to="/intakeform">
                   <span
                     style="position: relative; top: 6px"

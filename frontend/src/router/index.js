@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-// make all paths and names lowercase for consistency
+// make all paths and names lowercase for consistency - added new paths for Spring 2023
 const routes = [
   {
     path: "/",
@@ -20,6 +20,14 @@ const routes = [
     path: "/findclient",
     name: "findclient",
     component: () => import("../components/findClient.vue"),
+  },
+  {
+    path: '/services',
+    name: 'services',
+    component: () => import('../components/crudServices.vue'),
+    meta: {
+      needsAuth: true,
+    }
   },
   {
     path: "/updateclient/:id",
