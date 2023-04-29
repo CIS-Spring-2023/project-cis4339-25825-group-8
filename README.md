@@ -37,12 +37,22 @@ https://documenter.getpostman.com/view/17834164/2s93eR6GF6
 ### Login Credentials for the App
 
 ```
-
+Editor Roles
 Username: orgAEditor
 Password: orgAEditor
 
-
 Under are credentials for B and C but there is not much information for those organizations
+Username: orgBEditor
+Password: orgBEditor
+
+Username: orgCEditor
+Password: orgCEditor
+
+
+Viewer Roles
+Username: orgAEditor
+Password: orgAEditor
+
 Username: orgBEditor
 Password: orgBEditor
 
