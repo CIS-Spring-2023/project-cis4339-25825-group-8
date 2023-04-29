@@ -24,6 +24,16 @@ const orgDataSchema = new Schema(
           required: true,
         },
       },
+      viewer: {
+        username: {
+          type: String,
+          required: true,
+        },
+        password: {
+          type: String,
+          required: true,
+        },
+      },
     },
   },
   {

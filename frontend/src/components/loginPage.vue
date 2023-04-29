@@ -27,7 +27,24 @@ export default {
         if (response.status === 200) {
           console.log(response.data);
           alert("Login successful!");
-          this.$root.authenticated = true;
+          if (
+            response.data.username === "orgAEditor" ||
+            response.data.username === "orgBEditor" ||
+            response.data.username === "orgCEditor"
+          ) {
+            this.$root.authenticated = true;
+            console.log("MEEEPP");
+          } else if (
+            response.data.username === "orgA" ||
+            response.data.username === "orgB" ||
+            response.data.username === "orgC"
+          ) {
+            console.log("XXXXX");
+            this.$root.authenticated = false;
+          } else {
+            this.$root.authenticated = false;
+            console.log("OOOOOO");
+          }
           this.$router.push("/");
           console.log("pass");
         } else {
