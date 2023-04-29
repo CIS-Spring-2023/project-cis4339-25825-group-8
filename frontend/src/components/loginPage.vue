@@ -57,6 +57,18 @@ export default {
         alert("Login failed.");
       }
     },
+    async login() {
+      try {
+        const response = await axios.post(`${apiURL}/login`, {
+          username: this.username,
+          password: this.password,
+        });
+        const { username, orgName } = response.data;
+        this.$emit("login", { username, orgName });
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>

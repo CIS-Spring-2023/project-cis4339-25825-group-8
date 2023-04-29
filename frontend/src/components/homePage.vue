@@ -87,7 +87,9 @@ export default {
             @click="navigate"
             role="link"
           >
-            <router-link to="/loginPage">Login</router-link>
+            <router-link to="/loginPage">{{
+              recentEvents.length > 0 ? "Logout" : "Login"
+            }}</router-link>
           </button>
         </router-link>
       </div>

@@ -17,12 +17,7 @@ export default {
       authenticated: false,
     };
   },
-  // created() {
-  //   axios.get(`${apiURL}/org`).then((res) => {
-  //     this.orgName = res.data.name;
-  //     console.log("hello");
-  //   });
-  // },
+
   methods: {
     login() {
       this.$emit("login", { username: this.username, password: this.password });
