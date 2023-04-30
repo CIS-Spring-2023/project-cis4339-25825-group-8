@@ -1,10 +1,9 @@
-<!-- This code was created by using the chartJS example found at https://www.chartjs.org/docs/latest/charts/doughnut.html. 
-I also used the existing code in order to successfully implement the chart onto the homepage of the application. 
-I named the chart zipChart and the current data is hardcoded as required for sprint 2.
-Sprint 3 update: The zipchart has been updated to read the data from the mongoDB using axios and a GET function.
-The solution was pretty simple for this feature. I simply connected the route to the GET function that gets all clients
-and then I worked through the collection to get each clients zip. Clients without a zip will still be shown but they will not have a 
-label for their zipcode. This is due to the fact that zip is not a required field on the client intake form.-->
+<!-- Sprint 2: This code was created by using the chartJS example found at https://www.chartjs.org/docs/latest/charts/doughnut.html. 
+The preexisting code and chartJS tutorial were heavily referenced.
+Sprint 3 update: The zipChart has been updated to read the data from the mongoDB client collection using axios and a GET function.
+The solution for this feature required connecting the route to the GET function that gets all clients and then creating 
+a function to separate and collect the clients by their zip code. Clients without a zip will still be shown but they will 
+not have a label for their zip code. This is due to the fact that zip is not a required field on the client intake form.-->
 <script>
 import axios from 'axios'
 import { Chart, registerables } from 'chart.js'
@@ -25,7 +24,7 @@ export default {
     const response = await axios.get('http://localhost:3000/clients')
     const clients = response.data
 
-    // Aggregate the clients by zip code
+    // seperate and collect clients by zip code
     const clientsByZipcode = {}
     clients.forEach((Client) => {
       if (Client.address.zip in clientsByZipcode) {
@@ -35,7 +34,7 @@ export default {
       }
     })
 
-    // Transform the data to match the format expected by Chart.js
+    // put data into chart.js format
     const labels = Object.keys(clientsByZipcode)
     const data = Object.values(clientsByZipcode)
 
