@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-// let org = process.env.ORG;
-// const org = "2";
 let globals = require("./globals");
-
 let org = globals.getGlobalVariable();
 
 // importing data model schemas
@@ -26,10 +23,12 @@ router.get("/", (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
+
     // Check if username is not empty or null
     if (!username) {
       return res.status(400).send("Username is required");
     }
+
     // Query the database for a document that matches the given username field
     const dataEditor = await orgs.findOne({
       "credentials.editor.username": username,
@@ -38,12 +37,15 @@ router.post("/login", async (req, res, next) => {
       "credentials.viewer.username": username,
     });
     const data = dataEditor || dataViewer || null;
+
     if (!data) {
+      // If no matching document is found, return a 401 Unauthorized status
       res.status(401).send("Invalid username or password");
     } else {
       // Check if the password matches the hashed password in the database
       let passwordMatch = false;
       let user = null;
+
       if (data.credentials.editor.username === username) {
         passwordMatch = await bcrypt.compare(
           password,
@@ -55,15 +57,18 @@ router.post("/login", async (req, res, next) => {
         passwordMatch = regPasswordMatch;
         user = data.credentials.viewer.username;
       }
+
       if (passwordMatch) {
+        // If the password matches, set a global variable and send back the username and orgName
         globals.setGlobalVariable(data._id);
-        // Send back the username if username and password match
         res.json({ username: user, orgName: data.name });
       } else {
+        // If the password doesn't match, return a 401 Unauthorized status
         res.status(401).send("Invalid username or password");
       }
     }
   } catch (error) {
+    // If an error occurs, log the error and call the error-handling middleware
     console.log(`${error} here!!!!!!`);
     return next(error);
   }
