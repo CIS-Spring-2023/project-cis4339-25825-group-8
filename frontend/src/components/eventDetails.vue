@@ -1,81 +1,100 @@
 <script>
-import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import axios from "axios";
-import { DateTime } from "luxon";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import axios from 'axios'
+import { DateTime } from 'luxon'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
-  props: ["id"],
+  props: ['id'],
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) };
+    return { v$: useVuelidate({ $autoDirty: true }) }
   },
   data() {
-    return {
-      clientAttendees: [],
-      event: {
-        name: "",
-        services: [],
-        date: "",
-        address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
-        },
-        description: "",
-        attendees: [],
+  return {
+    clientAttendees: [],
+    event: {
+      name: "",
+      services: [],
+      date: "",
+      address: {
+        line1: "",
+        line2: "",
+        city: "",
+        county: "",
+        zip: "",
       },
-    };
-  },
+      description: "",
+      attendees: [],
+    },
+    services: [], // Add services data property
+  };
+},
   created() {
     axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
-      this.event = res.data;
-      this.event.date = this.formattedDate(this.event.date);
+      this.event = res.data
+      this.event.date = this.formattedDate(this.event.date)
       this.event.attendees.forEach((e) => {
         axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
-          this.clientAttendees.push(res.data);
-        });
+          this.clientAttendees.push(res.data)
+        })
+      })
+    })
+  },
+  created() {
+  // Retrieve the services from the services collection
+  axios.get(`${apiURL}/services`).then((res) => {
+    this.services = res.data;
+  });
+
+  // Retrieve the event from the events collection
+  axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
+    this.event = res.data;
+    this.event.date = this.formattedDate(this.event.date);
+    this.event.attendees.forEach((e) => {
+      axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
+        this.clientAttendees.push(res.data);
       });
     });
-  },
+  });
+},
+
   methods: {
     // better formatted date, converts UTC to local time
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: "utc",
-      });
+        zone: 'utc'
+      })
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toISODate();
+        .toISODate()
     },
     handleEventUpdate() {
       axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
-        alert("Update has been saved.");
-        this.$router.back();
-      });
+        alert('Update has been saved.')
+        this.$router.back()
+      })
     },
     editClient(clientID) {
-      this.$router.push({ name: "updateclient", params: { id: clientID } });
+      this.$router.push({ name: 'updateclient', params: { id: clientID } })
     },
     eventDelete() {
       axios.delete(`${apiURL}/events/${this.id}`).then(() => {
-        alert("Event has been deleted.");
-        this.$router.push({ name: "findevents" });
-      });
-    },
+        alert('Event has been deleted.')
+        this.$router.push({ name: 'findevents' })
+      })
+    }
   },
   // sets validations for the various data properties
   validations() {
     return {
       event: {
         name: { required },
-        date: { required },
-      },
-    };
-  },
-};
+        date: { required }
+      }
+    }
+  }
+}
 </script>
 <template>
   <main>
@@ -156,58 +175,19 @@ export default {
           <div></div>
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label>
-            <div>
-              <label for="familySupport" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="familySupport"
-                  value="Family Support"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Family Support</span>
-              </label>
-            </div>
-            <div>
-              <label for="adultEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="adultEducation"
-                  value="Adult Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Adult Education</span>
-              </label>
-            </div>
-            <div>
-              <label for="youthServices" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="youthServices"
-                  value="Youth Services Program"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Youth Services Program</span>
-              </label>
-            </div>
-            <div>
-              <label for="childhoodEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="childhoodEducation"
-                  value="Early Childhood Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Early Childhood Education</span>
-              </label>
+              <h2 class="text-2xl font-bold">Services</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <template v-for="(service, index) in services" :key="index">
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    v-model="event.services"
+                    :value="service._id"
+                  />
+                  <span class="ml-2">{{ service.name }}</span>
+                </label>
+              </template>
             </div>
           </div>
         </div>
@@ -339,7 +319,7 @@ export default {
                   :key="client._id"
                 >
                   <td class="p-2 text-left">
-                    {{ client.firstName + " " + client.lastName }}
+                    {{ client.firstName + ' ' + client.lastName }}
                   </td>
                   <td class="p-2 text-left">{{ client.address.city }}</td>
                   <td class="p-2 text-left">
