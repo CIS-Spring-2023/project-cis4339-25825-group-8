@@ -6,7 +6,6 @@ import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
 const apiURL = import.meta.env.VITE_ROOT_API
-
 export default {
   setup() {
     return { v$: useVuelidate({ $autoDirty: true }) }
@@ -27,26 +26,28 @@ export default {
           zip: ''
         },
         description: ''
-      }
+      },
+      services: [] // Add services data property
     }
   },
-  methods: { // three methods have been created in order to create, update, and delete from the services list.
-    createService() {
-      const newService = { id: Date.now(), name: this.newServiceName, status: 'active' }
-      this.event.services.push(newService)
-      this.newServiceName = ''
-    },
-    updateService(index) {
-      const service = this.event.services[index]
-    },
-    deleteService(index) {
-      const service = this.event.services[index]
-      if (service.status === 'inactive') {
-        this.event.services.splice(index, 1)
-      } else {
-        service.status = 'inactive'
-      }
-    },
+  created() {
+    axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
+      this.event = res.data
+      this.event.date = this.formattedDate(this.event.date)
+      this.event.attendees.forEach((e) => {
+        axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
+          this.clientAttendees.push(res.data)
+        })
+      })
+    })
+  },
+  created() {
+    // Retrieve the services from the services collection
+    axios.get(`${apiURL}/services`).then((res) => {
+      this.services = res.data;
+    })
+  },
+  methods: {
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
       const isFormCorrect = await this.v$.$validate()
@@ -137,43 +138,15 @@ export default {
           <div></div>
           <div></div>
           <!-- form field -->
-          <!-- Updated template for dynamic services -->
           <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label>
-            <div>  
-              <h1>Services</h1>
-              <form @submit.prevent="createService">
-                <label for="name">Service name:</label>
-                <input type="text" id="name" v-model="newServiceName" required>
-                <button type="submit">Create service</button>
-              </form>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(service, index) in event.services" :key="service.id">
-                    <td>
-                      <input type="text" v-model="service.name" :disabled="service.status === 'inactive'" required>
-                    </td>
-                    <td>
-                      <select v-model="service.status" :disabled="service.status === 'inactive'">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button @click="updateService(index)" :disabled="service.status === 'inactive'">Save</button>
-                      <button @click="deleteService(index)">{{ service.status === 'inactive' ? 'Restore' : 'Delete'
-                      }}</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <h2 class="text-2xl font-bold">Services</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <template v-for="(service, index) in services" :key="index">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox" v-model="event.services" :value="service._id" />
+                  <span class="ml-2">{{ service.name }}</span>
+                </label>
+              </template>
             </div>
           </div>
         </div>
