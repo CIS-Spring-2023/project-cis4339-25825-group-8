@@ -169,11 +169,11 @@ const servicesDataSchema = new Schema(
   }
 );
 
-// create models from mongoose schemas
+// create models from mongoose schemas - added services
 const clients = mongoose.model("client", clientDataSchema);
 const orgs = mongoose.model("org", orgDataSchema);
 const events = mongoose.model("event", eventDataSchema);
 const services = mongoose.model("services", servicesDataSchema);
 
-// package the models in an object to export
+// package the models in an object to export - added services
 module.exports = { clients, orgs, events, services };

@@ -8,7 +8,7 @@ const apiURL = import.meta.env.VITE_ROOT_API;
 export default {
   components: {
     AttendanceChart,
-    zipChart,
+    zipChart, // add zipChart from pieChart component
   },
   data() {
     return {
@@ -124,7 +124,8 @@ export default {
               v-if="!loading && !error"
               :label="labels"
               :chart-data="chartData"
-            ></AttendanceChart>
+            ></AttendanceChart> 
+            <!-- Insert zipChart onto the dashboard under the AttendanceChart -->
             <zipChart
               v-if="!loading && !error"
               :label="labels"

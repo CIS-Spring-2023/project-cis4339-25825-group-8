@@ -44,7 +44,7 @@ router.put('/update/:id', (req, res, next) => {
     })
 })
 
-// hard DELETE service by ID
+// hard DELETE service by ID - not required but very useful
 router.delete('/:id', (req, res, next) => {
     services.findByIdAndDelete(req.params.id, (error, data) => {
         if (error) {
